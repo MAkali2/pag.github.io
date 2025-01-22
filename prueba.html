@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>prueba</title>
+    <script src="https://www.paypal.com/sdk/js?client-id=ATdm0srekOjcIBV_C8Y0QZHaiu40LOq1nRdVTBc5F38XAAIrA7Giei07nDeOxd47oD2KrL0VrQjAUl4t&currency=USD"></script>
+</head>
+<body>
+    <div id="paypal-button-container"></div>
+    <script>
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '1.00'
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Transaction completed by ' + details.payer.name.given_name);
+                        console.log(details);
+                    });
+                },
+                onError: function(err) {
+                    console.error(err);
+                    alert('An error occurred');
+                }
+            }).render('#paypal-button-container');
+        paypal.Buttons({
+            createOrder: (data, actions) => {
+                // Crea un pedido con los detalles del pago
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '1.00' // Cambia el valor por el precio total del carrito
+                        }
+                    }]
+                });
+            },
+            onApprove: (data, actions) => {
+                // Manejar la aprobación del pago
+                return actions.order.capture().then((details) => {
+                    alert(`Pago completado por ${details.payer.name.given_name}`);
+                    console.log(details); // Puedes usar estos datos para registrar el pedido
+                });
+            },
+            onError: (err) => {
+                console.error(err);
+                alert('Hubo un error con el pago.');
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>
